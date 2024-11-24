@@ -20,23 +20,24 @@ def compare_promt(promt_one,prompt_two,user_queries) -> ResultResponse:
     sum_out_token_two = 0
     l = len(user_queries)
     for query in user_queries:
-       promt_one = Template(promt_one).safe_substitute(
-           query = query,
-       )
-       prompt_two = Template(prompt_two).safe_substitute(
-           query = query,
-       )
-       response_one = openai_call(promt_one)
-       response_two = openai_call(prompt_two)
-       sum_latancy_one += response_one.time
-       sum_in_token_one += response_one.input_token
-       sum_out_token_one += response_one.output_token
-       sum_latancy_two += response_two.time
-       sum_in_token_two += response_two.input_token
-       sum_out_token_two += response_two.output_token
-       logger.info(f"Data : {response_one}, {response_two}")
-       comparedResponse = ComparedResponse(result_promt_one = response_one,result_promt_two = response_two)
-       comparedResponses.append(comparedResponse)
+        promt_one_as = Template(promt_one).safe_substitute(
+            query = query,
+        )
+        prompt_two_as = Template(prompt_two).safe_substitute(
+            query = query,
+        )
+        logger.info(f'Promt {promt_one} : {prompt_two}')
+        response_one = openai_call(promt_one_as)
+        response_two = openai_call(prompt_two_as)
+        sum_latancy_one += response_one.time
+        sum_in_token_one += response_one.input_token
+        sum_out_token_one += response_one.output_token
+        sum_latancy_two += response_two.time
+        sum_in_token_two += response_two.input_token
+        sum_out_token_two += response_two.output_token
+        logger.info(f"Data : {response_one}, {response_two}")
+        comparedResponse = ComparedResponse(result_promt_one = response_one,result_promt_two = response_two)
+        comparedResponses.append(comparedResponse)
     return ResultResponse(
         compared_response=comparedResponses,
         average_latancy_one=int(sum_latancy_one / l),

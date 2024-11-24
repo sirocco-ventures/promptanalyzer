@@ -1,0 +1,17 @@
+/* frontend/src/styles.css */
+@import '@fortawesome/fontawesome-free/css/all.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: Arial, sans-serif; /* Example font */
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff; /* Light background color */
+}
+
+.app {
+    display: flex; /* Use flexbox to align sidebar and content */
+}

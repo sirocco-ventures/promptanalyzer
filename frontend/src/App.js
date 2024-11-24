@@ -162,7 +162,7 @@ const App = () => {
               {result && Object.keys(result).length > 0 && ( // Check if result is not empty
                 <details class="flex flex-col border-t border-t-[#cedbe8] py-2 group" open="">
                   <summary class="flex cursor-pointer items-center justify-between gap-6 py-2">
-                    <p class="text-[#0d141c] text-[18px] leading-tight tracking-[-0.015em] px-2 pb-3 pt-5">Results</p>
+                    <p class="text-[#0d141c] text-[18px] leading-tight tracking-[-0.015em] px-2 pb-3 pt-5">Results Summery</p>
                     <div class="text-[#0d141c] group-open:rotate-180" data-icon="CaretDown" data-size="20px" data-weight="regular">
                       <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
                         <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
@@ -172,42 +172,132 @@ const App = () => {
                   <div class="flex">
                     <div class="p-4 flex-1 grid grid-cols-[20%_1fr] gap-x-6">
                       <div class="col-span-2 border-t border-t-[#cedbe8] py-5">
-                        <p class="text-[#0d141c] text-sm font-normal leading-normal">Result : Prompt one</p>
+                        <p className="text-[#0d141c] text-sm font-normal leading-normal">Result : Prompt one</p>
                       </div>
                       <div class="col-span-2 grid grid-cols-subgrid border-t border-t-[#cedbe8] py-5">
                         <p class="text-[#49719c] text-sm font-normal leading-normal">Average latency</p>
-                        <p class="text-[#0d141c] text-sm font-normal leading-normal">{result.average_latancy_one}s</p>
+                        <p className={`text-sm font-normal leading-normal ${result.average_latancy_one < result.average_latancy_two ? 'text-green-500' : 'text-red-500'}`}>
+                          {result.average_latancy_one}s
+                        </p>
                       </div>
                       <div class="col-span-2 grid grid-cols-subgrid border-t border-t-[#cedbe8] py-5">
                         <p class="text-[#49719c] text-sm font-normal leading-normal">Average input token count</p>
-                        <p class="text-[#0d141c] text-sm font-normal leading-normal">{result.average_in_token_one}</p>
+                        <p className={`text-sm font-normal leading-normal ${result.average_in_token_one < result.average_in_token_two ? 'text-green-500' : 'text-red-500'}`}>
+                          {result.average_in_token_one}
+                        </p>
                       </div>
                       <div class="col-span-2 grid grid-cols-subgrid border-t border-t-[#cedbe8] py-5">
                         <p class="text-[#49719c] text-sm font-normal leading-normal">Average output token count</p>
-                        <p class="text-[#0d141c] text-sm font-normal leading-normal">{result.average_out_token_one}</p>
+                        <p className={`text-sm font-normal leading-normal ${result.average_out_token_one < result.average_out_token_two ? 'text-green-500' : 'text-red-500'}`}>
+                          {result.average_out_token_one}
+                        </p>
                       </div>
                     </div>
 
                     <div class="p-4 flex-1 grid grid-cols-[20%_1fr] gap-x-6">
                       <div class="col-span-2 border-t border-t-[#cedbe8] py-5">
-                        <p class="text-[#0d141c] text-sm font-normal leading-normal">Result : Prompt two</p>
+                        <p className="text-[#0d141c] text-sm font-normal leading-normal">Result : Prompt two</p>
                       </div>
                       <div class="col-span-2 grid grid-cols-subgrid border-t border-t-[#cedbe8] py-5">
                         <p class="text-[#49719c] text-sm font-normal leading-normal">Average latency</p>
-                        <p class="text-[#0d141c] text-sm font-normal leading-normal">{result.average_latancy_two}s</p>
+                        <p className={`text-sm font-normal leading-normal ${result.average_latancy_two < result.average_latancy_one ? 'text-green-500' : 'text-red-500'}`}>
+                          {result.average_latancy_two}s
+                        </p>
                       </div>
                       <div class="col-span-2 grid grid-cols-subgrid border-t border-t-[#cedbe8] py-5">
                         <p class="text-[#49719c] text-sm font-normal leading-normal">Average input token count</p>
-                        <p class="text-[#0d141c] text-sm font-normal leading-normal">{result.average_in_token_two}</p>
+                        <p className={`text-sm font-normal leading-normal ${result.average_in_token_two < result.average_in_token_one ? 'text-green-500' : 'text-red-500'}`}>
+                          {result.average_in_token_two}
+                        </p>
                       </div>
                       <div class="col-span-2 grid grid-cols-subgrid border-t border-t-[#cedbe8] py-5">
                         <p class="text-[#49719c] text-sm font-normal leading-normal">Average output token count</p>
-                        <p class="text-[#0d141c] text-sm font-normal leading-normal">{result.average_out_token_two}</p>
+                        <p className={`text-sm font-normal leading-normal ${result.average_out_token_two < result.average_out_token_one ? 'text-green-500' : 'text-red-500'}`}>
+                          {result.average_out_token_two}
+                        </p>
                       </div>
                     </div>
                   </div>
                 </details>
               )}
+
+{result && Object.keys(result).length > 0 && ( // Check if result is not empty
+            <details class="flex flex-col border-t border-t-[#cedbe8] py-2 group" open="">
+                <summary class="flex cursor-pointer items-center justify-between gap-6 py-2">
+                <p class="text-[#0d141c] text-[18px] leading-tight tracking-[-0.015em] px-2 pb-3 pt-5">Full Result</p>
+                  <div class="text-[#0d141c] group-open:rotate-180" data-icon="CaretDown" data-size="20px" data-weight="regular">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                      <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
+                    </svg>
+                  </div>
+                </summary>
+                <div class="flex items-center gap-4 bg-slate-50 px-4 min-h-[72px] py-2">
+                    <div class="flex flex-col justify-center flex-1">
+                        <div class="flex p-4" >
+                                <div class="flex-1">
+                                    <p class="text-[#49719c] text-base flex-grow font-medium leading-normal">
+                                       Result Promt One
+                                    </p>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-[#49719c] text-base flex-grow font-medium leading-normal">
+                                    Result Promt Two
+                                    </p>
+                                </div>
+                            </div>
+                    { result.compared_response.map((query, index) => (
+                            <div class="flex p-4 border-b border-b-[#cedbe8]" key={index}>
+                                <div class="flex-1">
+                                    <p class="text-[#49719c] text-base flex-grow font-medium leading-normal">
+                                        <span class="text-[#0d141c]">Query:</span> 
+                                        <span class="text-[#a0aec0]"> {query.result_promt_one.query}</span>
+                                    </p>
+                                    <p class="text-[#49719c] text-base flex-grow font-medium leading-normal">
+                                        <span class="text-[#0d141c]">Latency:</span> 
+                                        <span class="text-[#a0aec0]"> {query.result_promt_one.time}</span>
+                                    </p>
+                                    <p class="text-[#49719c] text-base flex-grow font-medium leading-normal">
+                                        <span class="text-[#0d141c]">Input Token Count:</span> 
+                                        <span class="text-[#a0aec0]"> {query.result_promt_one.input_token}</span>
+                                    </p>
+                                    <p class="text-[#49719c] text-base flex-grow font-medium leading-normal">
+                                        <span class="text-[#0d141c]">Output Token Count:</span> 
+                                        <span class="text-[#a0aec0]"> {query.result_promt_one.output_token}</span>
+                                    </p>
+                                    <p class="text-[#49719c] text-base flex-grow font-medium leading-normal">
+                                        <span class="text-[#0d141c]">Response:</span> 
+                                        <span class="text-[#a0aec0]"> {query.result_promt_one.response}</span>
+                                    </p>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-[#49719c] text-base flex-grow font-medium leading-normal">
+                                        <span class="text-[#0d141c]">Query:</span> 
+                                        <span class="text-[#a0aec0]"> {query.result_promt_two.query}</span>
+                                    </p>
+                                    <p class="text-[#49719c] text-base flex-grow font-medium leading-normal">
+                                        <span class="text-[#0d141c]">Latency:</span> 
+                                        <span class="text-[#a0aec0]"> {query.result_promt_two.time}</span>
+                                    </p>
+                                    <p class="text-[#49719c] text-base flex-grow font-medium leading-normal">
+                                        <span class="text-[#0d141c]">Input Token Count:</span> 
+                                        <span class="text-[#a0aec0]"> {query.result_promt_two.input_token}</span>
+                                    </p>
+                                    <p class="text-[#49719c] text-base flex-grow font-medium leading-normal">
+                                        <span class="text-[#0d141c]">Output Token Count:</span> 
+                                        <span class="text-[#a0aec0]"> {query.result_promt_two.output_token}</span>
+                                    </p>
+                                    <p class="text-[#49719c] text-base flex-grow font-medium leading-normal">
+                                        <span class="text-[#0d141c]">Response:</span> 
+                                        <span class="text-[#a0aec0]"> {query.result_promt_two.response}</span>
+                                    </p>
+                                </div>
+                                
+                            </div>
+                    ))}
+                </div>
+                </div>
+            </details>
+            )}
 
 
 

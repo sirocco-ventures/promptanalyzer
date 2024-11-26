@@ -7,13 +7,20 @@ const App = () => {
     const [newUserQuery, setNewUserQuery] = useState('');
     const [userQueries, setUserQueries] = useState([]);
     const [result, setResult] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [llmModel, setllmModel] = useState('');
+    const [apiKey, setapiKey] = useState('');
 
-    const runComparison = async (promptOne, promptTwo, userQueries) => {
+    const runComparison = async (promptOne, promptTwo, userQueries,llmModel,apiKey) => {
         const inputData = {
             promt_one: promptOne,
             promt_two: promptTwo,
-            user_queries: userQueries
+            user_queries: userQueries,
+            llmModel : llmModel,
+            apiKey : apiKey
         };
+
+        setLoading(true);
 
         try {
             const response = await axios.post(`http://localhost:8080/compare`, inputData);
@@ -25,6 +32,8 @@ const App = () => {
             }
         } catch (error) {
             console.error('Error during comparison:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -63,6 +72,46 @@ const App = () => {
           <div class="layout-content-container flex flex-col w-[512px] py-5 max-w-[960px] flex-1">
             <h2 class="text-[#0d141c] tracking-light text-[28px] font-bold leading-tight px-4 text-center pb-3 pt-5">Compare and evaluate LLM System prompts</h2>
             <div class="flex flex-col p-4">
+              
+
+            <details class="flex flex-col border-t border-t-[#cedbe8] py-2 group" open="">
+                <summary class="flex cursor-pointer items-center justify-between gap-6 py-2">
+                  <p class="text-[#0d141c] text-[18px] leading-tight tracking-[-0.015em] px-2 pb-3 pt-5">OpenAI Credentials</p>
+                  <div class="text-[#0d141c] group-open:rotate-180" data-icon="CaretDown" data-size="20px" data-weight="regular">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                      <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path>
+                    </svg>
+                  </div>
+                </summary>
+                <div class="flex flex-col">
+                    <div class="flex items-end gap-4 px-4 py-3">
+                        <label class="flex flex-col min-w-40 flex-1">
+                        <p class="text-[#49719c] text-base font-medium leading-normal line-clamp-1 pl-2 pb-2">Select Model</p>
+                            <select 
+                                class="form-input flex w-full min-w-0 flex-1 rounded-xl text-[#0d141c] focus:outline-0 focus:ring-0 border border-[#cedbe8] bg-slate-50 focus:border-[#cedbe8] placeholder:text-[#49719c] p-[15px] text-base font-normal leading-normal" 
+                                value={llmModel} 
+                                onChange={(e) => setllmModel(e.target.value)}
+                            >
+                                <option value="">Select a model</option>
+                                <option value="GPT-4o">GPT-4o</option>
+                                <option value="GPT-4o mini">GPT-4o mini</option>
+                                <option value="o1-preview">o1-preview</option>
+                                <option value="o1-mini">o1-mini</option>
+                                <option value="GPT-4 Turbo">GPT-4 Turbo</option>
+                                <option value="GPT-4">GPT-4</option>
+                                <option value="GPT-3.5 Turbo">GPT-3.5 Turbo</option>
+                            </select>
+                        </label>
+                    </div>
+                    <div class="flex items-end gap-4 px-4 py-3">
+                        <label class="flex flex-col min-w-40 flex-1">
+                        <p class="text-[#49719c] text-base font-medium leading-normal line-clamp-1 pl-2 pb-2">API Key</p>
+                        <input type="password" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#0d141c] focus:outline-0 focus:ring-0 border border-[#cedbe8] bg-slate-50 focus:border-[#cedbe8] placeholder:text-[#49719c] p-[15px] text-base font-normal leading-normal" value={apiKey} onChange={(e) => setapiKey(e.target.value)}></input>
+                        </label>
+                    </div>
+                </div>
+              </details>
+              
               <details class="flex flex-col border-t border-t-[#cedbe8] py-2 group" open="">
                 <summary class="flex cursor-pointer items-center justify-between gap-6 py-2">
                   <p class="text-[#0d141c] text-[18px] leading-tight tracking-[-0.015em] px-2 pb-3 pt-5">System Promts</p>
@@ -107,7 +156,7 @@ const App = () => {
                                 {query}
                             </p>
                             <button 
-                                    class="ml-2 text-red-500" 
+                                    class="ml-2 text-red-500 hover:text-red-700" 
                                     onClick={() => {
                                         setUserQueries(userQueries.filter((_, i) => i !== index)); // Remove query by index
                                     }}
@@ -124,7 +173,7 @@ const App = () => {
                 <div class="flex px-4 py-3 justify-end">
                 <input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#0d141c] focus:outline-0 focus:ring-0 border border-[#cedbe8] bg-slate-50 focus:border-[#cedbe8] placeholder:text-[#49719c] px-[15px] mx-6 text-base font-normal leading-normal" value={newUserQuery} onChange={(e) => setNewUserQuery(e.target.value)}></input>
                 <button 
-                    class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#e7edf4] text-[#0d141c] gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em]"
+                    class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#e7edf4] text-[#0d141c] gap-2 pl-4 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-[#d1e7f4]"
                     onClick={() => {
                         if (newUserQuery.trim()) { // Check if input is not empty
                             setUserQueries([...userQueries, newUserQuery]); // Add input to userQueries
@@ -150,11 +199,18 @@ const App = () => {
                     </div>
                     <div class="flex px-4 py-3 justify-center">
                         <button
-                            class={`flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 flex-1 ${!promptOne || !promptTwo || userQueries.length === 0 ? 'bg-gray-400' : 'bg-[#0b6fda]'} text-slate-50 text-sm font-bold leading-normal tracking-[0.015em]`}
+                            className={`flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 flex-1 ${!promptOne || !promptTwo || userQueries.length === 0 ? 'bg-gray-400' : 'bg-[#0b6fda] hover:bg-blue-700'} text-slate-50 text-sm font-bold leading-normal tracking-[0.015em]`}
                             onClick={handleRunComparison}
                             disabled={!promptOne || !promptTwo || userQueries.length === 0} // Disable button if prompts or user queries are empty
                         >
-                            <span class="truncate">Run comparison</span>
+                            {loading ? (
+                                <div class="flex">
+                                <span className="truncate flex">Run comparison</span>
+                                <span className="loader  flex ml-3"></span>
+                                </div>
+                            ) : (
+                                <span className="truncate">Run comparison</span>
+                            )}
                         </button>
                     </div>
                 </div>
